@@ -71,7 +71,7 @@ const quickp = (function() {
         popup.addEventListener('mouseout',popupMouseout.bind(null,popup));
         popup.addEventListener('click',popupClick.bind(null,popup));
         
-        document.title = doctitle + ' — ' + _state.filename;
+        document.title = `${_state.filename} — ${doctitle}`;
         
         localforage.length().then(n => {if(n > 0) autosaveDialog();});
     };
