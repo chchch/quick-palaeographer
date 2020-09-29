@@ -1,0 +1,214 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: "brill";
+    src: url("fonts/brill-roman.ttf");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "brill";
+    src: url("fonts/brill-bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "brill";
+    src: url("fonts/brill-italic.ttf");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "brill";
+    src: url("fonts/brill-bold-italic.ttf");
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+body {
+    font-family: 'brill', serif;
+    color: black;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0 auto;
+    line-height: 1.2;
+    font-size: 1.5em;
+    letter-spacing: 0;
+    position: relative;
+    padding: 0;
+    background: rgb(232,232,231);
+    display: flex;
+    align-items: stretch;
+    width: 100vw;
+    flex-direction: row;
+}
+
+#osd {
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+#opendiv, #autosavecontainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+#opendiv {
+    background: rgb(232,232,231);
+}
+
+#openform {
+    background: white;
+}
+
+#autosavecontainer {
+    display: none;
+    background: rgba(0,0,0,0.5);
+}
+
+
+#openform div, #autosavebox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1em;
+}
+
+#autosavediv > div {
+    padding: 5px;
+}
+
+#openform div {
+    border: 1px solid grey;
+}
+
+#autosavediv {
+    background: white;
+}
+
+#autosavebox {
+    border: 1px dotted grey;
+    padding: 1em;
+}
+
+.autosaved {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.autosaved:hover {
+    background: rgba(180,184,196,0.8);
+}
+
+#autosavebuttons {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+#autosavecancel {
+    background: rgba(180,184,196,0.8);
+    margin; 8px;
+    padding: 5px;
+}
+
+#autosavecancel:hover {
+    background: rgb(244,148,33);
+}
+
+.trash svg {
+    height: 25px;
+}
+
+.trash:hover path {
+    fill: red;
+}
+
+#aksarabar {
+    width: 35vw;
+    height: 100vh;
+    background: white;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#aksarabar #buttonbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#aksarabar #buttonbar #closer {
+    width: 35px;
+    height: 34px;
+    margin-left: 2px;
+    margin-bottom: 2px;
+}
+
+#aksarabar #content {
+    overflow: scroll;
+}
+
+#aksarabar #content canvas {
+    padding: 1px;
+    cursor: pointer;
+    border: 2px rgba(0,0,0,0) solid;
+}
+
+#aksarabar #content canvas:hover {
+    border: 2px rgb(244,148,33) solid;
+}
+
+#aksarabar #content td {
+    white-space: nowrap;
+}
+
+#aksarabar #content tr:hover {
+    background: rgba(180,184,196,0.8);
+}
+#buttonbar div {
+    position: relative;
+}
+
+#buttonbar .button_hover, #aksarabar .button_pressed {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#assets {
+    display: none;
+}
+
+.r6o-autocomplete input {
+    font-family: 'brill', serif;
+    font-size: 16px;
+}
+
+.r6o-editor {
+    font-family: 'brill', serif;
+}
+
+.r6o-widget.r6o-tag ul.r6o-taglist li {
+    font-size: 16px;
+}
