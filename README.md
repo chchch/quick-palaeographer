@@ -17,3 +17,4 @@ Quick palaeographer can be used either online, via [https://chchch.github.io/qui
 5. Open the annotations sidebar (button in the top-right corner) to see your annotations.
 6. You can save your annotations in JSON format with the Export button.
 7. You can load your annotations again later (they are also autosaved).
+8. You can open your annotations in a new window (button in the top-right corner) and then save the complete webpage (`Save Page As...` in your browser). Then you can edit it, for example, in LibreOffice Writer.
