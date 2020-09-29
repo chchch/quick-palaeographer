@@ -133,7 +133,9 @@ const quickp = (function() {
     const exportJSON = function() {
         const str = JSON.stringify(_state.anno.getAnnotations());
         const file = new Blob([str], {type: 'text/json;charset=utf-8'});
-        const filename = _state.filename.reverse().split('.',2)[1].reverse();
+        const filenamearr = _state.filename.split('.');
+        filenamearr.pop();
+        const filename = filenamearr.join('');
         FileSaver(file,`${filename}-annotations.json`);
     };
    
