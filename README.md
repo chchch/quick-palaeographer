@@ -2,7 +2,7 @@
 
 This tool is based on OpenSeadragon and Annotorious, and is intended to be used to images of manuscripts. Use SHIFT-click to draw bounding boxes, and tag glyphs. Then, open the annotation sidebar to see all your annotations. They are listed in Sanskrit alphabetical order.
 
-This tool was created as part of the TST project, funded by the research program FRAL 2018 (ANR & DFG). The manuscript image in the demonstration is courtesy of the Bibliothèque nationale de France.
+This tool was created as part of the [TEST project](https://tst.hypotheses.org/), funded by the research program FRAL 2018 (ANR & DFG). The manuscript image in the demonstration is courtesy of the Bibliothèque nationale de France.
 
 ![demo](demo.gif "demo")
 
