@@ -280,9 +280,10 @@ const quickp = (function() {
     };
 
     const aksaraPopup = function() {
-        const newWin = window.open('about:blank','_blank');
+        const newWin = window.open('about:blank','annotations');
         newWin._state = _state;
-        newWin.onload = function() {
+        const winload = function() {
+            if(newWin.document.querySelector('table')) return;
             const title = `${_state.filename} annotations`;
             newWin.document.title = title;
             const link = newWin.document.createElement('link');
@@ -304,8 +305,11 @@ const quickp = (function() {
             const contentbox = newWin.document.createElement('div');
             displayCrops(contentbox,true);
             newWin.document.body.appendChild(contentbox);
+            newWin.getComputedStyle(newWin.document.querySelector('table'));
         };
+        newWin.addEventListener('load',winload);
         newWin.focus();
+        newWin.setTimeout(winload,1000);
     };
     const appendAnnotations = function(w,e) {
         const f = e.target.files[0];
