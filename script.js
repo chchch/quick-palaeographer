@@ -1,8 +1,11 @@
 const quickp = (function() {
+    const OpenSeadragon = window.OpenSeadragon;
+    const localforage = window.localforage;
+    const FileSaver = window.FileSaver;
     const _state = {};
     
     const alphabet = ['oṁ','oṃ','a','ā','i','ī','u','ū','ṛ','ṝ','ḷ','ḹ','e','ē','o','ō','ai','au','ṃ','ṁ','ḥ','ḵ','k','kh','g','gh','ṅ','c','ch','j','jh','ñ','ṭ','ṭh','ḍ','ḍh','ṇ','t','th','d','dh','n','p','ph','b','bh','m','y','r','l','v','ḻ','ṟ','ṉ','ś','ṣ','s','h'].reverse();
-    const alphamax = Math.max(...alphabet.map(s => s.length));
+    //const alphamax = Math.max(...alphabet.map(s => s.length));
     
     const doctitle = document.title;
 
@@ -85,7 +88,7 @@ const quickp = (function() {
     const autosaveDialog = function() {
         const container = document.getElementById('autosavecontainer');
         container.style.display = 'flex';
-        const div = document.getElementById('autosavediv');
+        //const div = document.getElementById('autosavediv');
         const box = document.getElementById('autosavebox');
         localforage.keys().then(ks => {
             for(const k of ks) {
@@ -119,7 +122,7 @@ const quickp = (function() {
 
     const removeAutosaved = function(k) {
         localforage.removeItem(k);
-        const boxitem = document.querySelector(`#autosavebox .autosaved[data-storage-key='${k}'`);
+        const boxitem = document.querySelector(`#autosavebox .autosaved[data-storage-key='${k}']`);
         boxitem.remove();
         const leftovers = document.querySelectorAll('#autosavebox .autosaved');
         if(leftovers.length === 0)
@@ -286,6 +289,15 @@ const quickp = (function() {
             link.rel = 'stylesheet';
             link.href = 'popup.css';
             newWin.document.head.appendChild(link);
+            const addDiv = newWin.document.createElement('div');
+            addDiv.className = 'topmenu';
+            addDiv.append('append annotations ');
+            const addButton = newWin.document.createElement('input');
+            addButton.type = 'file';
+            addButton.accept = '.html,text/html';
+            addDiv.append(addButton);
+            newWin.document.body.appendChild(addDiv);
+            addButton.addEventListener('change',appendAnnotations.bind(null,newWin));
             const header = newWin.document.createElement('h2');
             header.appendChild(newWin.document.createTextNode(title));
             newWin.document.body.appendChild(header);
@@ -294,6 +306,57 @@ const quickp = (function() {
             newWin.document.body.appendChild(contentbox);
         };
         newWin.focus();
+    };
+    const appendAnnotations = function(w,e) {
+        const f = e.target.files[0];
+
+        const targDoc = w.document;
+
+        const loadHTMLAnnos = function(e) {
+            const domtree = (new DOMParser()).parseFromString(e.target.result,'text/html');
+
+            const oldh2 = targDoc.querySelector('h2');
+            const newh2 = domtree.querySelector('h2');
+            if(newh2) {
+                oldh2.appendChild(document.createElement('br'));
+                oldh2.append(newh2.textContent);
+            }
+
+            const newrows = domtree.querySelectorAll('tr');
+            const table = targDoc.querySelector('table');
+            const oldrows = new Map(
+                [...table.querySelectorAll('tr')].map(r => {
+                    const th = r.querySelector('th').textContent;
+                    const td = r.querySelector('td');
+                    return [th,td];
+                })
+            );
+            for(const n of newrows) {
+                const th = n.querySelector('th').textContent;
+                const td = n.querySelector('td');
+                if(oldrows.has(th)) {
+                    const par = oldrows.get(th);
+                    while(td.firstChild)
+                        par.appendChild(td.firstChild);
+                }
+                else {
+                    table.appendChild(n);
+                }
+            }
+            const allrows = new Map(
+                [...table.querySelectorAll('tr')].map(r => {
+                    const th = r.querySelector('th').textContent;
+                    return [th,r];
+                })
+            );
+            const sorted = [...allrows.keys()].sort(glyphSort);
+            for(const s of sorted)
+                table.appendChild(allrows.get(s));
+        };
+
+        const reader = new FileReader();
+        reader.onload = loadHTMLAnnos;
+        reader.readAsText(f);
     };
 
     const importJSON = function() {
@@ -335,3 +398,4 @@ const quickp = (function() {
     };
 
 })();
+window.addEventListener('load',quickp.initLoader);
