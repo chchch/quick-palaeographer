@@ -19,6 +19,16 @@ Quick palaeographer can be used either online, via [https://chchch.github.io/qui
 7. You can load your annotations again later (they are also autosaved).
 8. You can open your annotations in a new window (button in the top-right corner) and then save the complete webpage (`Save Page As...` in your browser). Then you can edit it, for example, in LibreOffice Writer.
 
+### Adding annotations from several folia
+
+* open the annotations in a new window (top-right button);
+* right-click on the page and "Save As..." the complete webpage to your computer;
+* repeat for all the folios you wish to include;
+* for the last folio, when you open the annotations in a new window, use the "append annotations" function at the top;
+* select one of the HTML files that you saved.
+Save the final HTML file.  You can later open it with, say, LibreOffice and create a document for reference.
+
+
 ## Example
 
 There is an example image in the `example/` directory, along with annotations. To look at the example, download both the JPEG image and the annotations in JSON format. Load the image in Quick palaeographer. Then, load the annotation file with the Import button.
