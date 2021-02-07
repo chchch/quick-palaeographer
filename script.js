@@ -149,10 +149,10 @@ const quickp = (function() {
         document.getElementById('closer').addEventListener('click',closeAksaraBar);
     };
 
-    const displayCrops = function(div,img = false) {
+    const displayCrops = function(div,img = false,an) {
         const aksarabar = div || document.getElementById('content');
         aksarabar.innerHTML = '';
-        const annos = _state.anno.getAnnotations();
+        const annos = an || _state.anno.getAnnotations();
         const taglist = new Map();
         for(const a of annos) {
             const tags = a.body.filter(t => t.purpose === 'tagging');
@@ -280,6 +280,17 @@ const quickp = (function() {
     };
 
     const aksaraPopup = function() {
+        const exported = {
+            an: _state.anno.getAnnotations(),
+            glyphSplit: glyphSplit,
+            displayCrops: displayCrops,
+            title: `${_state.filename} annotations`,
+            FileSaver: FileSaver
+        };
+        const newWin = window.open('popup.html','annotations');
+        newWin.imported = exported;
+        newWin.onload = function() {newWin.load();};
+        /*
         const newWin = window.open('about:blank','annotations');
         newWin._state = _state;
         const winload = function() {
@@ -310,7 +321,9 @@ const quickp = (function() {
         newWin.addEventListener('load',winload);
         newWin.focus();
         newWin.setTimeout(winload,1000);
+        */
     };
+    /*
     const appendAnnotations = function(w,e) {
         const f = e.target.files[0];
 
@@ -362,7 +375,7 @@ const quickp = (function() {
         reader.onload = loadHTMLAnnos;
         reader.readAsText(f);
     };
-
+*/
     const importJSON = function() {
         const loadFile = function(e) {
             const f = e.target.files[0];
