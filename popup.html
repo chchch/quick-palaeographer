@@ -96,6 +96,7 @@ function load() {
 const saveAnnotations = function() {
    const docclone = document.cloneNode(true);
    docclone.querySelector('script').remove();
+   docclone.querySelector('#topmenu').remove();
    //const serializer = new XMLSerializer();
    //const str = serializer.serializeToString(docclone);
    const str = docclone.documentElement.outerHTML;
