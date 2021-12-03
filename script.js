@@ -21,6 +21,7 @@ const quickp = (function() {
                 type: 'image',
                 url: url,
             },
+            maxZoomPixelRatio: 4,
         });
         _state.viewer.addHandler('open', () => {
             const importButton = new OpenSeadragon.Button({
