@@ -386,7 +386,10 @@ const quickp = (function() {
         };
         const loadAnnoString = function(e) {
             const jj = JSON.parse(e.target.result);
-            _state.anno.setAnnotations(jj); 
+            //_state.anno.setAnnotations(jj); 
+            for(const j of jj)
+                _state.anno.addAnnotation(j);
+            updateAnnos();
         };
         const input = document.createElement('input');
         input.type = 'file';
