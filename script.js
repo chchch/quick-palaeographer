@@ -150,7 +150,7 @@ const quickp = (function() {
         document.getElementById('closer').addEventListener('click',closeAksaraBar);
     };
 
-    const displayCrops = function(div,img = false,an) {
+    const displayCrops = function(div,img = false,an = null) {
         const aksarabar = div || document.getElementById('content');
         aksarabar.innerHTML = '';
         const annos = an || _state.anno.getAnnotations();
@@ -398,18 +398,23 @@ const quickp = (function() {
     };
     
     const loadImage = function(e) {
+        /*
         const loadImageSrc = function(e) {
             const imgel = document.createElement('img');
             imgel.src = e.target.result;
             _state.imgel = imgel;
             initViewer(imgel.src);
         };
-
+        */
         const f = e.target.files[0];
         _state.filename = f.name;
-        const reader = new FileReader();
-        reader.onload = loadImageSrc;
-        reader.readAsDataURL(f);
+        //const reader = new FileReader();
+        //reader.onload = loadImageSrc;
+        //reader.readAsDataURL(f);
+        const imgel = document.createElement('img');
+        imgel.src = URL.createObjectURL(f);
+        _state.imgel = imgel;
+        initViewer(imgel.src);
         document.getElementById('opendiv').style.display = 'none';            
     };
 
