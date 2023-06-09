@@ -172,6 +172,7 @@ body {
     padding: 1px;
     cursor: pointer;
     border: 2px rgba(0,0,0,0) solid;
+    /*height: 100px;*/
 }
 
 #aksarabar #content canvas:hover {
