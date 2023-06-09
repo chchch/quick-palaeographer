@@ -19,10 +19,12 @@ Quick palaeographer can be used either online, via [https://chchch.github.io/qui
 7. You can load your annotations again later (they are also autosaved).
 8. You can open your annotations in a new window (button in the top-right corner) and then save the complete webpage (`Save Page As...` in your browser). Then you can edit it, for example, in LibreOffice Writer.
 
+**Important:** The autosaved annotations are saved in your browser. If you clear your browser data (e.g. cookies, etc.), the autosaved data will be lost!!!!1
+
 ### Adding annotations from several folia
 
 * open the annotations in a new window (top-right button);
-* right-click on the page and "Save As..." the complete webpage to your computer;
+* click 'save annotations' and save the resulting HTML file to your computer;
 * repeat for all the folios you wish to include;
 * for the last folio, when you open the annotations in a new window, use the "append annotations" function at the top;
 * select one of the HTML files that you saved.
