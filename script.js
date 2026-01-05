@@ -1,11 +1,10 @@
+import { displayCrops, glyphSort } from './libs.mjs';
+
 const quickp = (function() {
     const OpenSeadragon = window.OpenSeadragon;
     const localforage = window.localforage;
     const FileSaver = window.FileSaver;
     const _state = {};
-    
-    const alphabet = ['oṁ','oṃ','a','ā','i','ī','u','ū','ṛ','ṝ','ḷ','ḹ','e','ē','o','ō','ai','au','ṃ','ṁ','ḥ','ḵ','k','kh','g','gh','ṅ','c','ch','j','jh','ñ','ṭ','ṭh','ḍ','ḍh','ṇ','t','th','d','dh','n','p','ph','b','bh','m','y','r','l','v','ḻ','ṟ','ṉ','ś','ṣ','s','h'].reverse();
-    //const alphamax = Math.max(...alphabet.map(s => s.length));
     
     const doctitle = document.title;
 
@@ -83,7 +82,7 @@ const quickp = (function() {
     const updateAnnos = function() {
         localforage.setItem(_state.filename,_state.anno.getAnnotations());
         if(document.getElementById('aksarabar').style.display === 'flex')
-            displayCrops();
+          displayCrops(_state.imgel,document.getElementById('content'),false,_state.anno.getAnnotations());
     };
     
     const autosaveDialog = function() {
@@ -146,66 +145,8 @@ const quickp = (function() {
     const showAnnotations = function() {
         _state.annotationsButton.element.style.display = 'none';
         document.getElementById('aksarabar').style.display = 'flex';
-        displayCrops();
+        displayCrops(_state.imgel,document.getElementById('content'),false,_state.anno.getAnnotations());
         document.getElementById('closer').addEventListener('click',closeAksaraBar);
-    };
-
-    const displayCrops = function(div,img = false,an = null) {
-        const aksarabar = div || document.getElementById('content');
-        aksarabar.innerHTML = '';
-        const annos = an || _state.anno.getAnnotations();
-        const taglist = new Map();
-        for(const a of annos) {
-            const tags = a.body.filter(t => t.purpose === 'tagging');
-            for(const t of tags) {
-                const val = t.value.trim();
-                if(taglist.has(val)) {
-                    const arr = taglist.get(val);
-                    arr.push(a);
-                    taglist.set(val,arr);
-                }
-                else {
-                    taglist.set(val,[a]);
-                }
-            }
-        }
-        const table = document.createElement('table');
-        const sorted = [...taglist.keys()].sort(glyphSort);
-        for(const s of sorted) {
-            const tr = document.createElement('tr');
-            const th = document.createElement('th');
-            th.appendChild(document.createTextNode(s));
-            tr.appendChild(th);
-            const td = document.createElement('td');
-            for(const t of taglist.get(s)) {
-                const el = img ? canvasToImg(makeCrop(t)) : makeCrop(t);
-                td.appendChild(el);
-            }
-            tr.appendChild(td);
-            table.appendChild(tr);
-        }
-        aksarabar.appendChild(table);
-    };
-
-    const makeCrop = function(el) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const xywh = el.target.selector.value;
-        const coords = xywh.split(':')[1].split(',').map(n => parseInt(n));
-        canvas.width = coords[2];
-        canvas.height = coords[3];
-        ctx.drawImage(_state.imgel,coords[0],coords[1],coords[2],coords[3],0,0,coords[2],coords[3]);
-        canvas.dataset.annoId = el.id;
-        canvas.dataset.centreX = coords[0] + coords[2]/2;
-        canvas.dataset.centreY = coords[1] + coords[3]/2;
-        return canvas;
-    };
-    
-    const canvasToImg = function(c) {
-        const url = c.toDataURL();
-        const i = document.createElement('img');
-        i.src = url;
-        return i;
     };
 
     const clickCrop = function(e) {
@@ -215,43 +156,6 @@ const quickp = (function() {
         //const point = _state.viewer.viewport.imageToViewportCoordinates(e.target.dataset.centreX,e.target.dataset.centreY);
         //_state.viewer.viewport.panTo(point);
         _state.anno.panTo(annoid);
-    };
-    
-    const glyphSplit = function(str) {
-        const ret = [];
-        var test = str;
-        const testSlice = function(s) {
-            var copy = s;
-            while(copy.length > 0) {
-                if(alphabet.includes(copy))
-                    return copy;
-                else
-                    copy = copy.substr(0,copy.length-1);
-            }
-            return s.substr(0,1);
-        };
-        
-        while(test.length > 0) {
-            const slice = test.substr(0,2);
-            const result = testSlice(slice);
-            ret.push(result);
-            test = test.slice(result.length);
-        }
-        return ret;
-    };
-
-    const glyphSort = function(a,b) {
-        const asplit = glyphSplit(a);
-        const bsplit = glyphSplit(b);
-        const max = Math.max(asplit.length,bsplit.length);
-        for(let n=0;n<max;n++) {
-            const apos = alphabet.indexOf(asplit[n]);
-            const bpos = alphabet.indexOf(bsplit[n]);
-            if(apos > bpos) return -1;
-            else if(apos < bpos) return 1;
-        }
-        if(a.length < b.length) return -1;
-        else return 1;
     };
 
     const mouseoverAksaraCloser = function(parel) {
@@ -283,14 +187,18 @@ const quickp = (function() {
     const aksaraPopup = function() {
         const exported = {
             an: _state.anno.getAnnotations(),
-            glyphSplit: glyphSplit,
-            displayCrops: displayCrops,
+            imgblob: _state.imgblob,
             title: `${_state.filename} annotations`,
-            FileSaver: FileSaver
         };
         const newWin = window.open('popup.html','annotations');
-        newWin.imported = exported;
-        newWin.onload = function() {newWin.load();};
+        const bc = new BroadcastChannel('quick_palaeographer');
+        bc.onmessage = e => {
+          if(e.data === 'popup-ready') {
+            bc.postMessage(exported);
+          }
+        };
+        //newWin.imported = exported;
+        //newWin.onload = function() {newWin.load();};
         /*
         const newWin = window.open('about:blank','annotations');
         newWin._state = _state;
@@ -405,16 +313,20 @@ const quickp = (function() {
             _state.imgel = imgel;
             initViewer(imgel.src);
         };
+        const f = e.target.files[0];
+        _state.filename = f.name;
+        const reader = new FileReader();
+        reader.onload = loadImageSrc;
+        reader.readAsDataURL(f);
         */
         const f = e.target.files[0];
         _state.filename = f.name;
-        //const reader = new FileReader();
-        //reader.onload = loadImageSrc;
-        //reader.readAsDataURL(f);
+        _state.imgblob = f;
         const imgel = document.createElement('img');
         imgel.src = URL.createObjectURL(f);
         _state.imgel = imgel;
         initViewer(imgel.src);
+
         document.getElementById('opendiv').style.display = 'none';            
     };
 
