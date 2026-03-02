@@ -6,7 +6,7 @@ const load = imported => {
     const imgel = document.createElement('img');
     imgel.src = URL.createObjectURL(imported.imgblob);
 
-    document.getElementById('savebutton').addEventListener('click',saveAnnotations);
+    document.getElementById('savebutton').addEventListener('click',saveAnnotations.bind(null,imported));
     document.getElementById('addbutton').addEventListener('change',appendAnnotations);
     document.getElementById('addtext').addEventListener('click',function() {
         document.getElementById('addbutton').click();
@@ -17,7 +17,7 @@ const load = imported => {
     imgel.addEventListener('load', e => displayCrops(imgel,document.getElementById('content'),true,an));
 };
 
-const saveAnnotations = function() {
+const saveAnnotations = imported => {
    const docclone = document.cloneNode(true);
    docclone.querySelector('script').remove();
    docclone.querySelector('.topmenu').remove();
